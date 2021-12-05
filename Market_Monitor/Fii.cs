@@ -22,8 +22,8 @@ namespace Market_Monitor
 		public double PricePerM2 { get; set; }
 		public double RentPerM2 { get; set; }
 		public double CapRate { get; set; }
-
 		public double AverageVacancy { get; set; }
+		public int Points { get; set; }
 
 		#endregion
 
@@ -41,9 +41,8 @@ namespace Market_Monitor
 						p_stringWord = p_stringWord.Replace(Regex.Match(p_stringWord, "%").Value, "");
 					if (Regex.IsMatch(p_stringWord.ToString(), @"\."))
 						p_stringWord = p_stringWord.Replace(Regex.Match(p_stringWord, @"\.").Value, "");
-
-					//if (Regex.IsMatch(p_stringWord.ToString(), ","))
-					//	p_stringWord = p_stringWord.Replace(Regex.Match(p_stringWord, ",").Value, ".");
+					if (Regex.IsMatch(p_stringWord.ToString(), ","))
+						p_stringWord = p_stringWord.Replace(Regex.Match(p_stringWord, ",").Value, ".");
 					p_stringNumber += p_stringWord;
 					
 				}
@@ -111,16 +110,14 @@ namespace Market_Monitor
 			}
 			
 		}
-
 		public double CalculateMagicNumberByName(string p_name, List<Fii> l_fii)
 		{
 			try
 			{
 				Fii fii = new Fii();
-				double p_quote = 0.90;
-				fii = l_fii.Find(p => fii.Name == p_name);
-				double result = 90.65/ p_quote;//fii.Price / p_quote; 
-				return Math.Round(result);
+				fii = l_fii.Find(p => p.Name == p_name.ToUpper());
+				double result = fii.Price/ fii.P_VP;
+				return Math.Ceiling(result);
 			}
 			catch (Exception ex)
 			{
@@ -129,6 +126,26 @@ namespace Market_Monitor
 			}
 			return double.NaN;
 		}
+		public void GetFiiByName(string p_name, List<Fii> m_fii)
+		{
+			Fii fii = m_fii.Find(p => p.Name == p_name.ToUpper());
+
+			Console.WriteLine("{0,10}\t{1,20}\t{2,10}\t{3,10}\t{4,10}\t{5,10}\t{6,10}", "Name", "Segment","Price", "Average Vacancy", "Qtd Imoveis","Preço por m2","Aluguel por m2");
+			Console.WriteLine("{0,10}\t{1,20}\t{2,10}\t{3,10}\t{4,10}\t{5,10}\t{6,10}", fii.Name, fii.Segment, fii.Price, fii.AverageVacancy, fii.RealEstateQuantity, fii.PricePerM2, fii.RentPerM2);
+		}
+		public List<Fii> GetBestFii(List<Fii> m_fii)
+		{
+			List<Fii> l_fiis = new List<Fii>();
+			
+			foreach (var item in m_fii)
+			{
+				if (item.AverageVacancy < 15)
+					item.Points += 1;
+				
+			}
+			return l_fiis;
+		}
+
 		#endregion
 		//enum QualityClassifier
 		//{
