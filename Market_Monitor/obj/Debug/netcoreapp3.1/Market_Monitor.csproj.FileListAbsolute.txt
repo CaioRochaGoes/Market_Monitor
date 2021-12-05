@@ -1,0 +1,15 @@
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\bin\Debug\netcoreapp3.1\Market_Monitor.exe
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\bin\Debug\netcoreapp3.1\Market_Monitor.deps.json
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\bin\Debug\netcoreapp3.1\Market_Monitor.runtimeconfig.json
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\bin\Debug\netcoreapp3.1\Market_Monitor.runtimeconfig.dev.json
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\bin\Debug\netcoreapp3.1\Market_Monitor.dll
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\bin\Debug\netcoreapp3.1\Market_Monitor.pdb
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\bin\Debug\netcoreapp3.1\HtmlAgilityPack.dll
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.csproj.AssemblyReference.cache
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.AssemblyInfoInputs.cache
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.AssemblyInfo.cs
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.csproj.CoreCompileInputs.cache
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.csproj.CopyComplete
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.dll
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.pdb
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.genruntimeconfig.cache
