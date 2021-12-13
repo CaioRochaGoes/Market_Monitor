@@ -13,3 +13,4 @@ D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcorea
 D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.dll
 D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.pdb
 D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.genruntimeconfig.cache
+D:\Programacao\VIsualStudioRepo\Market_Monitor\Market_Monitor\obj\Debug\netcoreapp3.1\Market_Monitor.GeneratedMSBuildEditorConfig.editorconfig
