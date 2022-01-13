@@ -145,8 +145,22 @@ namespace Market_Monitor
 			}
 			return l_fiis;
 		}
-
+		public void GetFiiBySegmnt(List<Fii> m_fii)
+		{
+			//m_fii.Find(s)
+		}
 		#endregion
+		public enum FiiSegment
+		{
+			Shoppings = 1,
+			Hibrido = 2,
+			TitulosValMob= 3,
+			LajesCorporativas = 4,
+			Logistica = 5,
+			Residencial = 6,
+			Outros = 7
+
+		}
 		//enum QualityClassifier
 		//{
 		//	good,
