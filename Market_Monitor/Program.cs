@@ -7,28 +7,35 @@ using System.Xml;
 
 namespace Market_Monitor
 {
-	class Program
+	public class Program
 	{
 		
 		static void Main(string[] args)
 		{
-			Console.WriteLine(@" __  __               _           _     __  __                _  _"+"\n"
-							+ @"|  \/  |             | |         | |   |  \/  |              (_)| |"+"\n"
-							+ @"| \  / |  __ _  _ __ | | __  ___ | |_  | \  / |  ___   _ __   _ | |_   ___   _ __"+"\n"
-							+ @"| |\/| | / _` || '__|| |/ / / _ \| __| | |\/| | / _ \ | '_ \ | || __| / _ \ | '__|" + "\n"
-							+ @"| |  | || (_| || |   |   < |  __/| |_  | |  | || (_) || | | || || |_ | (_) || |" + "\n"
-							+ @"|_|  |_| \__,_||_|   |_|\_\ \___| \__| |_|  |_| \___/ |_| |_||_| \__| \___/ |_|");
+			string p_taskMonitor = @" __  __               _           _     __  __                _  _" + "\n"
+								+ @"|  \/  |             | |         | |   |  \/  |              (_)| |" + "\n"
+								+ @"| \  / |  __ _  _ __ | | __  ___ | |_  | \  / |  ___   _ __   _ | |_   ___   _ __" + "\n"
+								+ @"| |\/| | / _` || '__|| |/ / / _ \| __| | |\/| | / _ \ | '_ \ | || __| / _ \ | '__|" + "\n"
+								+ @"| |  | || (_| || |   |   < |  __/| |_  | |  | || (_) || | | || || |_ | (_) || |" + "\n"
+								+ @"|_|  |_| \__,_||_|   |_|\_\ \___| \__| |_|  |_| \___/ |_| |_||_| \__| \___/ |_|" + "\n" + "\n";
+			
 			//Console.WriteLine("Market Monitor");
 			while (true)
 			{
-				Console.WriteLine("\n***** _MENU_ *****\n1 - Finanças\n2 - FII´s\n Taxas e Indices BR");
+				Console.WriteLine(p_taskMonitor);
+				Console.WriteLine("\n***** _MENU_ *****\n1 - Finanças\n2 - FII´s");
+				//Console.WriteLine("\n***** _MENU_ *****\n1 - Finanças\n2 - FII´s\n Taxas e Indices BR");
 				string option = Console.ReadLine();
 				switch (option)
 				{
 					case "1":
+						Console.Clear();
+						Console.WriteLine(p_taskMonitor);
 						FinanceMenu();
 						break;
 					case "2":
+						Console.Clear();
+						Console.WriteLine(p_taskMonitor);
 						FiiMenu();
 						break;
 					case "3":
@@ -40,100 +47,14 @@ namespace Market_Monitor
 			}
 			
 		}
-		public static void CreateUser() 
-		{
-			string p_currentdDirectory = Directory.GetCurrentDirectory();
-			string p_foldercConfig = "/config";
-			if (!Directory.Exists(p_currentdDirectory + p_foldercConfig))
-			{ 
-				Directory.CreateDirectory(p_currentdDirectory + p_foldercConfig);
-			}
-			p_foldercConfig = p_currentdDirectory + p_foldercConfig;
-
-			string p_fileUserConfigs = p_foldercConfig + "/user.xml";
-
-			Console.WriteLine("Criando Novo Usuário\n");
-			Console.Write("Nome de Usuario: ");
-			string p_userName = Console.ReadLine().Trim();
-			string p_userPassword = string.Empty ;
-			string p_userRepeatPassword = string.Empty;
-			while (true) 
-			{
-				while (true)
-				{
-					
-					Console.Write("Senha: ");
-					while (true)
-					{
-						var key = System.Console.ReadKey(true);
-						if (key.Key == ConsoleKey.Enter)
-							break;
-						p_userPassword += key.KeyChar;
-					}
-					Console.WriteLine("");
-					Console.Write("Repetir senha: ");
-					while (true)
-					{
-						var key = System.Console.ReadKey(true);
-						if (key.Key == ConsoleKey.Enter)
-							break;
-						p_userRepeatPassword += key.KeyChar;
-					}
-					if (p_userRepeatPassword.Equals(p_userPassword))
-						break;
-					else
-					{
-						p_userPassword = string.Empty;
-						p_userRepeatPassword = string.Empty;
-					}
-				}
-				break;
-
-			}
-
-			using (XmlWriter p_xmlWriter = XmlWriter.Create(p_fileUserConfigs))
-			{
-				p_xmlWriter.WriteStartElement("user");
-				p_xmlWriter.WriteElementString("name", p_userName);
-				p_xmlWriter.WriteElementString("password", p_userPassword);
-				p_xmlWriter.WriteEndElement();
-				p_xmlWriter.Flush();
-			}
-
-			
-		}
-		public static User UserAuthentication(string p_fileUserConfigs)
-		{
-			Console.Write("Nome de Usuário: ");
-			string p_userName = Console.ReadLine();
-			string p_userPassword = string.Empty;
-			Console.Write("Senha: ");
-			while (true)
-			{
-				var key = System.Console.ReadKey(true);
-				if (key.Key == ConsoleKey.Enter)
-					break;
-				p_userPassword += key.KeyChar;
-			}
-
-			User p_user = new User();
-			using (XmlReader p_xmlReader = XmlReader.Create(p_fileUserConfigs)) 
-			{
-				p_user.Id = 1;
-				p_user.Name = p_xmlReader.ReadToFollowing("name").ToString();
-				p_user.Password = p_xmlReader.ReadToFollowing("password").ToString();
-				if (p_userName.Trim().Equals(p_user.Name)
-					&& p_userPassword.Equals(p_user.Password))
-					return p_user;
-				else
-					return p_user;
-			}
-		}
+		
 		public static void FinanceMenu()
 		{
+		
 			User p_user = new User();
 			string p_currentdDirectory = Directory.GetCurrentDirectory();
 			string p_foldercConfig = @"\config";
+			string p_folderFinance = @"\finance";
 			string p_fileUserConfigs = p_currentdDirectory + p_foldercConfig + @"\user.xml";
 			while (true)
 			{
@@ -141,16 +62,17 @@ namespace Market_Monitor
 				{
 					if (!File.Exists(p_fileUserConfigs))
 					{
-						CreateUser();
+						p_user = User.CreateUser();
 						break;
 					}
 					else
-					{
 						break;
-					}
+					
 				}
-				p_user = UserAuthentication(p_fileUserConfigs);
-				if (null != p_user)
+				//p_user = User.ReadUserXML(p_fileUserConfigs);
+				Console.WriteLine("*** _Login_ ***");
+				p_user = User.UserAuthentication(p_fileUserConfigs);
+				if (null != p_user.Name)
 				{
 					Console.Clear();
 					Console.WriteLine("Seja bem Vindo !"+ p_user.Name);
@@ -158,8 +80,9 @@ namespace Market_Monitor
 				}
 				else
 				{
-					Console.WriteLine("Usuário ou Senha Inválidos");
 					Console.Clear();
+					Console.WriteLine("Usuário ou Senha Inválidos");
+					
 				}
 
 			}
@@ -168,26 +91,47 @@ namespace Market_Monitor
 			Finance finance = new Finance();
 			while (true)
 			{
-				Console.WriteLine("\n***** _FINANCE_MENU_ *****\n1 -  Calculo Reserva de Emergência");
+				Console.WriteLine("\n***** _FINANCE_MENU_ *****\n1 -  Calculo Reserva de Emergência\n2 -  Minha Carteira");
 				string option = Console.ReadLine();
 				switch (option)
 				{
 					case "1":
+
 						Console.WriteLine("Informe os seguintes valores\n\nSalário Mensal(1000.00) | Custo Mensal(1000.00) | Poupaça Mensal(10 %) | Meses Protegidos(12)");
 						Console.WriteLine("Salário Mensal: ");
 						double p_monthlySalary = double.Parse(Console.ReadLine());
+
 						Console.WriteLine("Custo Mensal: ");
 						double p_monthlyCost = double.Parse(Console.ReadLine());
+
 						Console.WriteLine("Poupaça Mensal: ");
 						double p_monthly_Savings = double.Parse(Console.ReadLine());
+
 						Console.WriteLine("Meses Protegidos (Opcional, padrão 12): ");
 						string p_numberMonths = Console.ReadLine();
+
 						int p_monthsProtected = 12;
+
 						if (!string.IsNullOrEmpty(p_numberMonths))
 							p_monthsProtected = int.Parse(p_numberMonths);
 
-
 						finance.CalculateEmergencyReserve(p_monthlySalary, p_monthlyCost, p_monthly_Savings, p_monthsProtected);
+						break;
+					case "2":
+						string p_fileUserWllet = p_currentdDirectory + p_folderFinance + @"\wallet.xml";
+						if (!File.Exists(p_fileUserWllet))
+						{
+							Console.WriteLine("Deseja Criar Suar Carteira de investimentos ? S/n");
+							string p_option = Console.ReadLine();
+							if (!string.IsNullOrWhiteSpace(p_option))
+								if (p_option.ToLower().Equals("s"))
+								{
+									Console.WriteLine("Adicionar FII´s: ");
+									Console.WriteLine("Escolha");
+								}
+								else
+									break;
+						}
 						break;
 					default:
 						break;
@@ -207,6 +151,8 @@ namespace Market_Monitor
 					Console.WriteLine("4 - Selecionar Fii");
 					Console.WriteLine("5 - Filtar por Segmento");
 
+					
+
 					Fii fii = new Fii();
 					string option = Console.ReadLine();
 					List<Fii> l_fii = fii.GetFiis();
@@ -224,14 +170,14 @@ namespace Market_Monitor
 					}
 					if (option == "3")
 					{
-						Console.WriteLine("Nome do FII: ");
+						Console.Write("\nNome do FII ex ( BCFF11 ): ");
 						string p_label = Console.ReadLine();
 						double p_magicNumber = fii.CalculateMagicNumberByName(p_label, l_fii);
-						Console.WriteLine($"NÚmero Mágico {p_label} - {p_magicNumber}");
+						Console.WriteLine($"\nNúmero Mágico {p_label} - {p_magicNumber}");
 					}
 					if (option == "4")
 					{
-						Console.WriteLine("Nome do FII: ");
+						Console.Write("\nNome do FII ex( BCFF11 ): ");
 						string p_label = Console.ReadLine();
 
 						if (!string.IsNullOrEmpty(p_label))
@@ -241,8 +187,17 @@ namespace Market_Monitor
 					{
 						
 					}
-
-					Console.ReadKey();
+					Console.WriteLine("\n\nPressione E para sair ou qualquer tecla para voltar ao Menu");
+					string p_exit = Console.ReadKey().Key.ToString();
+					if (p_exit.ToLower().Equals("e"))
+					{
+						Console.Clear();
+						break;
+					}
+					else
+					{
+						Console.Clear();
+					}
 				}
 			}
 			catch (Exception ex)

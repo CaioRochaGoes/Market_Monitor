@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "f5afo7ndiP/nYO8YbaNPnN8QBHam15lSDcAFne4UdmuT6Q21Cpzb2XZsbyIm52/0uk/BYVmpGC6Y5TWAzetwOA==",
+  "dgSpecHash": "sFEG3DDszROyQibuwMZov44/aqd+nnbYmjh1mhk389a5t019mUG+3M+G/tCMYA6ufIFzXQ4l5qNc8I1S/+wM2Q==",
   "success": true,
   "projectFilePath": "D:\\Programacao\\VIsualStudioRepo\\Market_Monitor\\Market_Monitor\\Market_Monitor.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\caior\\.nuget\\packages\\htmlagilitypack\\1.11.38\\htmlagilitypack.1.11.38.nupkg.sha512"
+    "C:\\Users\\caior\\.nuget\\packages\\htmlagilitypack\\1.11.38\\htmlagilitypack.1.11.38.nupkg.sha512",
+    "C:\\Users\\caior\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }

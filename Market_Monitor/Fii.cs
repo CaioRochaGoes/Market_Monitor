@@ -1,9 +1,12 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Market_Monitor
 {
@@ -57,6 +60,65 @@ namespace Market_Monitor
 			}
 			
 		}
+		public void SaveFIIsInXml(List<Fii> l_fiis)
+		{
+			try
+			{
+				//Console.WriteLine("Entrou Async SaveFIIsInXml");
+				string p_currentdDirectory = Directory.GetCurrentDirectory();
+				string p_folderFinance = @"\finance";
+				if (!Directory.Exists(p_currentdDirectory + p_folderFinance))
+				{
+					Directory.CreateDirectory(p_currentdDirectory + p_folderFinance);
+				}
+				string p_fileFiis = p_currentdDirectory + p_folderFinance + @"\fiis.json";
+
+				var p_json= JsonConvert.SerializeObject(l_fiis);
+				File.WriteAllText(p_fileFiis, p_json);
+				#region old
+				//var p_itenJson = using (XmlWriter p_xmlWriter = XmlWriter.Create(p_fileFiis))
+				//{
+
+
+				//	//var p_dateTime = DateTime.Now;
+				//	//p_xmlWriter.WriteStartElement("Date");
+				//	//p_xmlWriter.WriteElementString("Update", p_dateTime.ToString());
+				//	//p_xmlWriter.WriteEndElement();
+
+				//	//Problema ao criar o XML com varios  WriteStartElement
+
+				//	foreach (var p_fii in l_fiis)
+				//	{
+				//		p_xmlWriter.WriteStartElement(p_fii.Name.ToString());
+				//		p_xmlWriter.WriteElementString("AverageVacancy", p_fii.AverageVacancy.ToString());
+				//		p_xmlWriter.WriteElementString("CapRate", p_fii.CapRate.ToString());
+				//		p_xmlWriter.WriteElementString("DividendYield", p_fii.DividendYield.ToString());
+				//		p_xmlWriter.WriteElementString("FfoYield", p_fii.FfoYield.ToString());
+				//		p_xmlWriter.WriteElementString("Liquidity", p_fii.Liquidity.ToString());
+				//		p_xmlWriter.WriteElementString("MarketValue", p_fii.MarketValue.ToString());
+				//		p_xmlWriter.WriteElementString("Name", p_fii.Name);
+				//		p_xmlWriter.WriteElementString("Points", p_fii.Points.ToString());
+				//		p_xmlWriter.WriteElementString("Price", p_fii.Price.ToString());
+				//		p_xmlWriter.WriteElementString("PricePerM2", p_fii.PricePerM2.ToString());
+				//		p_xmlWriter.WriteElementString("P_VP", p_fii.P_VP.ToString());
+				//		p_xmlWriter.WriteElementString("RealEstateQuantity", p_fii.RealEstateQuantity.ToString());
+				//		p_xmlWriter.WriteElementString("RentPerM2", p_fii.RentPerM2.ToString());
+				//		p_xmlWriter.WriteElementString("Segment", p_fii.Segment);
+				//		p_xmlWriter.WriteEndElement();
+
+				//	}
+				//	p_xmlWriter.Flush();
+				//	Console.WriteLine("Finalizou Async SaveFIIsInXml");
+				//}
+				#endregion
+			}
+			catch (Exception ex)
+			{
+
+				Console.WriteLine(ex.Message);
+			}
+			
+		}
 		public List<Fii> GetFiis()
 		{
 			try
@@ -101,6 +163,7 @@ namespace Market_Monitor
 					counter += 1;
 				}
 				Console.WriteLine(l_fiis.Count + " FII´s Carregados");
+				SaveFIIsInXml(l_fiis);
 				return l_fiis;
 			}
 			catch (Exception ex)
@@ -145,6 +208,7 @@ namespace Market_Monitor
 			}
 			return l_fiis;
 		}
+
 		public void GetFiiBySegmnt(List<Fii> m_fii)
 		{
 			//m_fii.Find(s)
