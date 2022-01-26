@@ -43,11 +43,10 @@ namespace Market_Monitor
 			try
 			{
 				XElement p_xmlReader = XElement.Load(p_fileUserConfigs);
-				
-				p_user.Id = int.Parse(p_xmlReader.Element("id").ToString());
-				p_user.Name = p_xmlReader.Element("name").ToString();
-				p_user.Password = p_xmlReader.Element("password").ToString();
-				
+				p_user.Id = int.Parse(p_xmlReader.Element("id").Value);
+				p_user.Name = p_xmlReader.Element("name").Value;
+				p_user.Password = p_xmlReader.Element("password").Value;
+
 			}
 			catch (Exception ex)
 			{

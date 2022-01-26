@@ -60,20 +60,34 @@ namespace Market_Monitor
 			}
 			
 		}
-		public void SaveFIIsInXml(List<Fii> l_fiis)
+
+		public void UpdateFIIsInJson()
 		{
 			try
 			{
-				//Console.WriteLine("Entrou Async SaveFIIsInXml");
-				string p_currentdDirectory = Directory.GetCurrentDirectory();
 				string p_folderFinance = @"\finance";
-				if (!Directory.Exists(p_currentdDirectory + p_folderFinance))
-				{
-					Directory.CreateDirectory(p_currentdDirectory + p_folderFinance);
-				}
-				string p_fileFiis = p_currentdDirectory + p_folderFinance + @"\fiis.json";
+				string p_fileFii = @"\fii.json";
+				string p_fileFiis = Utility.CreateFile(p_folderFinance, p_fileFii);
+				FileInfo p_fileInfo = new FileInfo(p_fileFiis);
+				
+			}
+			catch (Exception ex)
+			{
 
-				var p_json= JsonConvert.SerializeObject(l_fiis);
+				Console.WriteLine(ex.Message);
+			}
+			
+		}
+
+
+		public void SaveFIIsInJson(List<Fii> l_fiis)
+		{
+			try
+			{
+				string p_folderFinance = @"\finance";
+				string p_fileFii = @"\fii.json";
+				string p_fileFiis = Utility.CreateFile(p_folderFinance, p_fileFii);
+				var p_json = JsonConvert.SerializeObject(l_fiis);
 				File.WriteAllText(p_fileFiis, p_json);
 				#region old
 				//var p_itenJson = using (XmlWriter p_xmlWriter = XmlWriter.Create(p_fileFiis))
@@ -163,7 +177,7 @@ namespace Market_Monitor
 					counter += 1;
 				}
 				Console.WriteLine(l_fiis.Count + " FII´s Carregados");
-				SaveFIIsInXml(l_fiis);
+				SaveFIIsInJson(l_fiis);
 				return l_fiis;
 			}
 			catch (Exception ex)
@@ -189,12 +203,23 @@ namespace Market_Monitor
 			}
 			return double.NaN;
 		}
-		public void GetFiiByName(string p_name, List<Fii> m_fii)
+		public Fii GetFiiByName(string p_name, List<Fii> m_fii)
 		{
-			Fii fii = m_fii.Find(p => p.Name == p_name.ToUpper());
+			Fii p_fii = new Fii();
+			try
+			{
 
-			Console.WriteLine("{0,10}\t{1,20}\t{2,10}\t{3,10}\t{4,10}\t{5,10}\t{6,10}", "Name", "Segment","Price", "Average Vacancy", "Qtd Imoveis","Preço por m2","Aluguel por m2");
-			Console.WriteLine("{0,10}\t{1,20}\t{2,10}\t{3,10}\t{4,10}\t{5,10}\t{6,10}", fii.Name, fii.Segment, fii.Price, fii.AverageVacancy, fii.RealEstateQuantity, fii.PricePerM2, fii.RentPerM2);
+				p_fii = m_fii.Find(p => p.Name == p_name.ToUpper());
+
+				Console.WriteLine("{0,10}\t{1,20}\t{2,10}\t{3,10}\t{4,10}\t{5,10}\t{6,10}", "Name", "Segment", "Price", "Average Vacancy", "Qtd Imoveis", "Preço por m2", "Aluguel por m2");
+				Console.WriteLine("{0,10}\t{1,20}\t{2,10}\t{3,10}\t{4,10}\t{5,10}\t{6,10}", p_fii.Name, p_fii.Segment, p_fii.Price, p_fii.AverageVacancy, p_fii.RealEstateQuantity, p_fii.PricePerM2, p_fii.RentPerM2);
+			}
+			catch (Exception ex)
+			{
+
+				Console.WriteLine(ex.Message);
+			}
+			return p_fii;
 		}
 		public List<Fii> GetBestFii(List<Fii> m_fii)
 		{
@@ -211,6 +236,12 @@ namespace Market_Monitor
 
 		public void GetFiiBySegmnt(List<Fii> m_fii)
 		{
+			/*
+			 Fazer busca de Fii por segmento, 
+			 não pode ser busca do seguimento em forma literal
+			*/
+
+
 			//m_fii.Find(s)
 		}
 		#endregion

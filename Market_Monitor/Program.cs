@@ -12,6 +12,8 @@ namespace Market_Monitor
 		
 		static void Main(string[] args)
 		{
+			Fii p_fii = new Fii();
+			List<Fii> l_fii = p_fii.GetFiis();
 			string p_taskMonitor = @" __  __               _           _     __  __                _  _" + "\n"
 								+ @"|  \/  |             | |         | |   |  \/  |              (_)| |" + "\n"
 								+ @"| \  / |  __ _  _ __ | | __  ___ | |_  | \  / |  ___   _ __   _ | |_   ___   _ __" + "\n"
@@ -50,7 +52,9 @@ namespace Market_Monitor
 		
 		public static void FinanceMenu()
 		{
-		
+			Fii p_fii = new Fii();
+			List<Fii> l_fii = p_fii.GetFiis();
+
 			User p_user = new User();
 			string p_currentdDirectory = Directory.GetCurrentDirectory();
 			string p_foldercConfig = @"\config";
@@ -93,6 +97,7 @@ namespace Market_Monitor
 			{
 				Console.WriteLine("\n***** _FINANCE_MENU_ *****\n1 -  Calculo Reserva de Emergência\n2 -  Minha Carteira");
 				string option = Console.ReadLine();
+
 				switch (option)
 				{
 					case "1":
@@ -118,7 +123,7 @@ namespace Market_Monitor
 						finance.CalculateEmergencyReserve(p_monthlySalary, p_monthlyCost, p_monthly_Savings, p_monthsProtected);
 						break;
 					case "2":
-						string p_fileUserWllet = p_currentdDirectory + p_folderFinance + @"\wallet.xml";
+						string p_fileUserWllet = p_currentdDirectory + p_folderFinance + @"\wallet.json";
 						if (!File.Exists(p_fileUserWllet))
 						{
 							Console.WriteLine("Deseja Criar Suar Carteira de investimentos ? S/n");
@@ -127,7 +132,10 @@ namespace Market_Monitor
 								if (p_option.ToLower().Equals("s"))
 								{
 									Console.WriteLine("Adicionar FII´s: ");
-									Console.WriteLine("Escolha");
+									Console.Write("Escolha ex (BCFF11): ");
+									string p_nameFii = Console.ReadLine();
+
+									p_fii = p_fii.GetFiiByName(p_nameFii, l_fii);
 								}
 								else
 									break;
@@ -141,6 +149,8 @@ namespace Market_Monitor
 		}
 		public static void FiiMenu()
 		{
+			Fii p_fii = new Fii();
+			List<Fii> l_fii = p_fii.GetFiis();
 			try
 			{
 				while (true)
@@ -151,11 +161,8 @@ namespace Market_Monitor
 					Console.WriteLine("4 - Selecionar Fii");
 					Console.WriteLine("5 - Filtar por Segmento");
 
-					
-
-					Fii fii = new Fii();
 					string option = Console.ReadLine();
-					List<Fii> l_fii = fii.GetFiis();
+					
 					if (option == "1")
 					{
 						Console.WriteLine("{0,10}\t{1,10}\t{2,20}\t{3,10}", "Name", "Average Vacancy", "Segment", "Price");
@@ -172,7 +179,7 @@ namespace Market_Monitor
 					{
 						Console.Write("\nNome do FII ex ( BCFF11 ): ");
 						string p_label = Console.ReadLine();
-						double p_magicNumber = fii.CalculateMagicNumberByName(p_label, l_fii);
+						double p_magicNumber = p_fii.CalculateMagicNumberByName(p_label, l_fii);
 						Console.WriteLine($"\nNúmero Mágico {p_label} - {p_magicNumber}");
 					}
 					if (option == "4")
@@ -181,7 +188,7 @@ namespace Market_Monitor
 						string p_label = Console.ReadLine();
 
 						if (!string.IsNullOrEmpty(p_label))
-							fii.GetFiiByName(p_label, l_fii);
+							p_fii.GetFiiByName(p_label, l_fii);
 					}
 					if (option == "5")
 					{
