@@ -12,48 +12,44 @@ namespace Market_Monitor
 		
 		static void Main(string[] args)
 		{
+			Console.Title = "Market_Monitor";
 			Fii p_fii = new Fii();
-			List<Fii> l_fii = p_fii.GetFiis();
-			string p_taskMonitor = @" __  __               _           _     __  __                _  _" + "\n"
-								+ @"|  \/  |             | |         | |   |  \/  |              (_)| |" + "\n"
-								+ @"| \  / |  __ _  _ __ | | __  ___ | |_  | \  / |  ___   _ __   _ | |_   ___   _ __" + "\n"
-								+ @"| |\/| | / _` || '__|| |/ / / _ \| __| | |\/| | / _ \ | '_ \ | || __| / _ \ | '__|" + "\n"
-								+ @"| |  | || (_| || |   |   < |  __/| |_  | |  | || (_) || | | || || |_ | (_) || |" + "\n"
-								+ @"|_|  |_| \__,_||_|   |_|\_\ \___| \__| |_|  |_| \___/ |_| |_||_| \__| \___/ |_|" + "\n" + "\n";
+			List<Fii> l_fii = Fii.GetFiis();
+			
 			
 			//Console.WriteLine("Market Monitor");
 			while (true)
 			{
-				Console.WriteLine(p_taskMonitor);
-				Console.WriteLine("\n***** _MENU_ *****\n1 - Finanças\n2 - FII´s");
+				Utility.PrintLogo();
+				Utility.PrintMenu("\n***** _MENU_ *****");
+				Utility.PrintList("\n1 - Finanças\n2 - FII´s");
 				//Console.WriteLine("\n***** _MENU_ *****\n1 - Finanças\n2 - FII´s\n Taxas e Indices BR");
-				string option = Console.ReadLine();
-				switch (option)
+				switch (Utility.ChooseOption())
 				{
 					case "1":
-						Console.Clear();
-						Console.WriteLine(p_taskMonitor);
+						Utility.PrintLogo();
 						FinanceMenu();
 						break;
 					case "2":
-						Console.Clear();
-						Console.WriteLine(p_taskMonitor);
+						Utility.PrintLogo();
 						FiiMenu();
 						break;
-					case "3":
-						//FiiMenu();
-						break;
 					default:
+						Console.Clear();
+						Utility.PrintMenu("\n***** _EM CONSTRUÇÃO_ *****");
+						Console.ReadKey();
 						break;
 				}
 			}
 			
 		}
-		
+
 		public static void FinanceMenu()
 		{
 			Fii p_fii = new Fii();
-			List<Fii> l_fii = p_fii.GetFiis();
+			//Mudar para GetFiisFromFile()
+			//List<Fii> l_fii = p_fii.GetFiis();
+			List<Fii> l_fii = new List<Fii>();
 
 			User p_user = new User();
 			string p_currentdDirectory = Directory.GetCurrentDirectory();
@@ -74,7 +70,7 @@ namespace Market_Monitor
 					
 				}
 				//p_user = User.ReadUserXML(p_fileUserConfigs);
-				Console.WriteLine("*** _Login_ ***");
+				Utility.PrintMenu("*** _Login_ ***");
 				p_user = User.UserAuthentication(p_fileUserConfigs);
 				if (null != p_user.Name)
 				{
@@ -95,10 +91,10 @@ namespace Market_Monitor
 			Finance finance = new Finance();
 			while (true)
 			{
-				Console.WriteLine("\n***** _FINANCE_MENU_ *****\n1 -  Calculo Reserva de Emergência\n2 -  Minha Carteira");
-				string option = Console.ReadLine();
-
-				switch (option)
+				Utility.PrintLogo();
+				Utility.PrintMenu("\n***** _FINANCE_MENU_ *****");
+				Utility.PrintList("\n1 - Calculo Reserva de Emergência\n2 - Minha Carteira");
+				switch (Utility.ChooseOption())
 				{
 					case "1":
 
@@ -150,61 +146,98 @@ namespace Market_Monitor
 		public static void FiiMenu()
 		{
 			Fii p_fii = new Fii();
-			List<Fii> l_fii = p_fii.GetFiis();
+			//Mudar para GetFiisFromFile()
+			//List<Fii> l_fii = p_fii.GetFiis();
+			List<Fii> l_fii = new List<Fii>();
 			try
 			{
 				while (true)
 				{
-					Console.WriteLine("1 - Listar FII´s");
-					Console.WriteLine("2 - Listar FII´s por Vacância");
-					Console.WriteLine("3 - Calcular Número Mágico Por Nome");
-					Console.WriteLine("4 - Selecionar Fii");
-					Console.WriteLine("5 - Filtar por Segmento");
-
-					string option = Console.ReadLine();
-					
-					if (option == "1")
+					Utility.PrintLogo();
+					Utility.PrintMenu("\n***** _FII´s_MENU_ *****");
+					Utility.PrintList("\n1 - Listar FII´s\n2 - Listar FII´s por Vacância\n3 - Calcular Número Mágico Por Nome\n4 - Selecionar FII\n5 - Filtar por Segmento");
+					string p_label = string.Empty;
+					bool p_break = false;
+					switch (Utility.ChooseOption())
 					{
-						Console.WriteLine("{0,10}\t{1,10}\t{2,20}\t{3,10}", "Name", "Average Vacancy", "Segment", "Price");
-						foreach (var item in l_fii)
-						{
-							Console.WriteLine("{0,10}\t{1,10}\t{2,20}\t{3,10}", item.Name, item.AverageVacancy, item.Segment, item.Price);
-						}
+						case "1":
+							Fii.PrintFIIs();
+							break;
+						case "2":
+							Console.WriteLine("Indisponivel Temporariamente");
+							Console.ReadKey();
+							break;
+						case "3":
+							Console.Write("\nNome do FII ex ( BCFF11 ): ");
+							p_label = Console.ReadLine();
+							double p_magicNumber = p_fii.CalculateMagicNumberByName(p_label, l_fii);
+							Console.WriteLine($"\nNúmero Mágico {p_label} - {p_magicNumber}");
+							Console.ReadKey();
+							break;
+						case "4":
+							Console.Write("\nNome do FII ex( BCFF11 ): ");
+							p_label = Console.ReadLine();
+							if (!string.IsNullOrEmpty(p_label))
+								p_fii.GetFiiByName(p_label, l_fii);
+							Console.ReadKey();
+							break;
+						case "5":
+							Console.WriteLine("Indisponivel Temporariamente");
+							Console.ReadKey();
+							break;
+						case "e":
+							Console.Clear();
+							p_break = true;
+							break;
+						default:
+							Console.Clear();
+							break;
 					}
-					if (option == "2")
-					{
-						Console.WriteLine("Não disponivel");
-					}
-					if (option == "3")
-					{
-						Console.Write("\nNome do FII ex ( BCFF11 ): ");
-						string p_label = Console.ReadLine();
-						double p_magicNumber = p_fii.CalculateMagicNumberByName(p_label, l_fii);
-						Console.WriteLine($"\nNúmero Mágico {p_label} - {p_magicNumber}");
-					}
-					if (option == "4")
-					{
-						Console.Write("\nNome do FII ex( BCFF11 ): ");
-						string p_label = Console.ReadLine();
-
-						if (!string.IsNullOrEmpty(p_label))
-							p_fii.GetFiiByName(p_label, l_fii);
-					}
-					if (option == "5")
-					{
-						
-					}
-					Console.WriteLine("\n\nPressione E para sair ou qualquer tecla para voltar ao Menu");
-					string p_exit = Console.ReadKey().Key.ToString();
-					if (p_exit.ToLower().Equals("e"))
-					{
-						Console.Clear();
+					if (p_break)
 						break;
-					}
-					else
-					{
-						Console.Clear();
-					}
+
+					#region old
+					//string option = Console.ReadLine();
+
+					//if (option == "1")
+					//{
+
+					//}
+					//if (option == "2")
+					//{
+					//	Console.WriteLine("Não disponivel");
+					//}
+					//if (option == "3")
+					//{
+					//	Console.Write("\nNome do FII ex ( BCFF11 ): ");
+					//	string p_label = Console.ReadLine();
+					//	double p_magicNumber = p_fii.CalculateMagicNumberByName(p_label, l_fii);
+					//	Console.WriteLine($"\nNúmero Mágico {p_label} - {p_magicNumber}");
+					//}
+					//if (option == "4")
+					//{
+					//	Console.Write("\nNome do FII ex( BCFF11 ): ");
+					//	string p_label = Console.ReadLine();
+
+					//	if (!string.IsNullOrEmpty(p_label))
+					//		p_fii.GetFiiByName(p_label, l_fii);
+					//}
+					//if (option == "5")
+					//{
+
+					//}
+					//Console.WriteLine("\n\nPressione E para sair ou qualquer tecla para voltar ao Menu");
+					//string p_exit = Console.ReadKey().Key.ToString();
+					//if (p_exit.ToLower().Equals("e"))
+					//{
+					//	Console.Clear();
+					//	break;
+					//}
+					//else
+					//{
+					//	Console.Clear();
+					//}
+					#endregion
 				}
 			}
 			catch (Exception ex)

@@ -2,8 +2,10 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -27,6 +29,17 @@ namespace Market_Monitor
 		public double CapRate { get; set; }
 		public double AverageVacancy { get; set; }
 		public int Points { get; set; }
+
+		[DllImport("kernel32.dll", ExactSpelling = true)]
+		private static extern IntPtr GetConsoleWindow();
+
+		private static IntPtr ThisConsole = GetConsoleWindow();
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+		private const int HIDE = 0;
+		private const int MAXIMIZE = 3;
+		private const int MINIMIZE = 6;
+		private const int RESTORE = 9;
 
 		#endregion
 
@@ -60,27 +73,68 @@ namespace Market_Monitor
 			}
 			
 		}
-
-		public void UpdateFIIsInJson()
+		public static void PrintFIIs()
 		{
 			try
 			{
 				string p_folderFinance = @"\finance";
 				string p_fileFii = @"\fii.json";
-				string p_fileFiis = Utility.CreateFile(p_folderFinance, p_fileFii);
-				FileInfo p_fileInfo = new FileInfo(p_fileFiis);
-				
+				FileInfo p_fileInfo = new FileInfo(Utility.CreateFile(p_folderFinance, p_fileFii));
+				DateTime p_lastAccess = p_fileInfo.LastAccessTime;
+				DateTime p_now = DateTime.Now;
+				DayOfWeek p_dayOfToday = p_lastAccess.DayOfWeek;
+				DayOfWeek p_lastAccesDay = p_lastAccess.DayOfWeek;
+				TimeSpan p_timeDifference = p_now.Subtract(p_lastAccess);
+
+
+				List<Fii> l_fiis = (
+						(DayOfWeek.Saturday != p_dayOfToday && DayOfWeek.Sunday != p_dayOfToday) // Verifica se não é um dos dias do Final de Semana (Sabado/Domingo)
+						&&	(p_timeDifference > new TimeSpan(0, 2, 0, 0, 0)) // Verifica se tem mais de 2h de diferença
+						&&	(p_now.Hour < 18 && p_now.Hour > 10) // Verifica se está dentre o horário de funcionamento do mercado BR
+					) 
+					? GetFiis() 
+					: GetFiisFromFile(p_fileInfo);
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine("\n\n{0,10}\t{1,20}\t{2,10}\t{3,17}\t{4,10}\t{5,10}\t{6,10}", "Name", "Segment", "Price", "Average Vacancy", "Qtd Imoveis", "Preço por m2", "Aluguel por m2\n\n");
+				Console.ForegroundColor = ConsoleColor.Yellow;
+				Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+				ShowWindow(ThisConsole, MAXIMIZE);
+				foreach (var p_fii in l_fiis)
+				{
+					Console.WriteLine("{0,10}\t{1,20}\t{2,10}\t{3,10}\t{4,10}\t{5,10}\t{6,10}", p_fii.Name, p_fii.Segment, p_fii.Price, p_fii.AverageVacancy, p_fii.RealEstateQuantity, p_fii.PricePerM2, p_fii.RentPerM2);
+				}
+				Console.ReadKey();
+				Console.ForegroundColor = ConsoleColor.White;
+
+
 			}
 			catch (Exception ex)
 			{
 
 				Console.WriteLine(ex.Message);
 			}
+
+		} 
+		//public void UpdateFIIsInJson()
+		//{
+		//	try
+		//	{
+		//		string p_folderFinance = @"\finance";
+		//		string p_fileFii = @"\fii.json";
+		//		string p_fileFiis = Utility.CreateFile(p_folderFinance, p_fileFii);
+		//		FileInfo p_fileInfo = new FileInfo(p_fileFiis);
+				
+		//	}
+		//	catch (Exception ex)
+		//	{
+
+		//		Console.WriteLine(ex.Message);
+		//	}
 			
-		}
+		//}
 
 
-		public void SaveFIIsInJson(List<Fii> l_fiis)
+		public static void SaveFIIsInJson(List<Fii> l_fiis)
 		{
 			try
 			{
@@ -133,7 +187,22 @@ namespace Market_Monitor
 			}
 			
 		}
-		public List<Fii> GetFiis()
+		public static List<Fii> GetFiisFromFile(FileInfo p_fileInfo)
+		{
+			List<Fii> l_fiis = new List<Fii>();
+			try
+			{
+				string p_JsonOfFiis = File.ReadAllText(p_fileInfo.FullName);
+				l_fiis = JsonConvert.DeserializeObject<List<Fii>>(p_JsonOfFiis);
+			}
+			catch (Exception ex)
+			{
+
+				Console.WriteLine(ex.Message);
+			}
+			return l_fiis;
+		}
+		public static List<Fii> GetFiis()
 		{
 			try
 			{
